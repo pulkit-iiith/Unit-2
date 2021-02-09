@@ -6,20 +6,16 @@ import java.awt.*;
 import java.awt.print.*;
 
 public class ScoreReport {
-
 	private String content;
-	
-	public ScoreReport( Bowler bowler, int[] scores, int games ) {
+		public ScoreReport( Bowler bowler, int[] scores, int games ) {
 		String nick = bowler.getNick();
 		String full = bowler.getFullName();
 		Vector v = null;
 		try{
 			v = ScoreHistoryFile.getScores(nick);
 		} catch (Exception e){System.err.println("Error: " + e);}
-		
-		Iterator scoreIt = v.iterator();
-		
-		content = "";
+				Iterator scoreIt = v.iterator();
+				content = "";
 		content += "--Lucky Strike Bowling Alley Score Report--\n";
 		content += "\n";
 		content += "Report for " + full + ", aka \"" + nick + "\":\n";
@@ -33,14 +29,14 @@ public class ScoreReport {
 		content += "\n";
 		content += "\n";
 		content += "Previous scores by date: \n";
+		Score score;
 		while (scoreIt.hasNext()){
-			Score score = (Score) scoreIt.next();
+			score = (Score) scoreIt.next();
 			content += "  " + score.getDate() + " - " +  score.getScore();
 			content += "\n";
 		}
 		content += "\n\n";
 		content += "Thank you for your continuing patronage.";
-
 	}
 
 	public void sendEmail(String recipient) {
@@ -89,7 +85,6 @@ public class ScoreReport {
 				System.out.println(e);
 			}
 		}
-
 	}
 
 	public void sendln(BufferedReader in, BufferedWriter out, String s) {
@@ -113,6 +108,4 @@ public class ScoreReport {
 			e.printStackTrace();
 		}
 	}
-
-
 }
