@@ -1,14 +1,26 @@
+package Views;
 /*
- * To change this generated comment edit the template variable "typecomment":
+ 
+* To change this generated comment edit the template variable "typecomment":
  * Window>Preferences>Java>Templates.
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
 
 import javax.swing.*;
+
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import Main.Bowler;
+import Main.Lane;
+import Main.LaneEvent;
+import Main.LaneObserver;
+import Main.Pinsetter;
+import Main.PinsetterEvent;
+import Main.PinsetterObserver;
 
 public class LaneStatusView implements ActionListener, LaneObserver, PinsetterObserver {
     int laneNum;

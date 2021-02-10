@@ -1,3 +1,4 @@
+package Main;
 /* ControlDeskEvent.java Version: $Id$ Revisions: $Log$ */
 
 /* Class that represents control desk event */

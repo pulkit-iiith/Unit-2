@@ -1,8 +1,10 @@
+package Views;
 /* ControlDeskView.java Version: $Id$ Revisions: $Log$ */
 
 /* Class for representation of the control desk */
 
 import javax.swing.*;
+
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -12,6 +14,12 @@ import java.awt.event.WindowEvent;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Vector;
+
+import Main.ControlDesk;
+import Main.ControlDeskEvent;
+import Main.ControlDeskObserver;
+import Main.Lane;
+import Main.Pinsetter;
 
 public class ControlDeskView implements ActionListener, ControlDeskObserver {
     private JButton addParty;

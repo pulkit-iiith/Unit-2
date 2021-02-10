@@ -1,3 +1,4 @@
+package Views;
 /* AddPartyView.java
  *
  *  Version:
@@ -26,6 +27,12 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Vector;
+
+
+import Main.Bowler;
+import Main.BowlerFile;
+
+
 
 /** Class for GUI components need to add a party. */
 

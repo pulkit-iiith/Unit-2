@@ -1,4 +1,6 @@
+package Main;
 /*
+
   To change this generated comment edit the template variable "typecomment":
   Window>Preferences>Java>Templates.
   To enable and disable the creation of type comments go to
@@ -9,7 +11,7 @@ import java.io.*;
 import java.util.Vector;
 
 public class ScoreHistoryFile {
-    private static final String SCOREHISTORY_DAT = "SCOREHISTORY.DAT";
+    private static final String SCOREHISTORY_DAT = "../SCOREHISTORY.DAT";
 
     public static void addScore(String nick, String date, String score)
             throws IOException {

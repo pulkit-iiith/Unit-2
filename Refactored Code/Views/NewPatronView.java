@@ -1,3 +1,4 @@
+package Views;
 /* AddPartyView.java
  *
  *  Version

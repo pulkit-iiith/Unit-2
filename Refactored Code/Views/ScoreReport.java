@@ -1,3 +1,4 @@
+package Views;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 import java.io.BufferedReader;
@@ -7,6 +8,10 @@ import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.util.Iterator;
 import java.util.Vector;
+
+import Main.Bowler;
+import Main.Score;
+import Main.ScoreHistoryFile;
 
 public class ScoreReport {
     private String content;

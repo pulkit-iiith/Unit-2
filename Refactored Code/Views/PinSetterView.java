@@ -1,8 +1,13 @@
+package Views;
 /* PinSetterView/.java Version: $Id$ Revision: $Log$ */
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.Vector;
+
+import Main.PinsetterEvent;
+import Main.PinsetterObserver;
+
 /** Constructs a prototype PinSetter GUI. */
 
 public class PinSetterView implements PinsetterObserver {

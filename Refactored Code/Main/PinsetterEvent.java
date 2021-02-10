@@ -1,3 +1,4 @@
+package Main;
 /**  $Id$
  *
  *  Revisions:
@@ -49,7 +50,7 @@ public class PinsetterEvent {
     /**
      * PinsDownOnThisThrow().
      *
-     * @return the number of pins knocked down assosicated with this event
+     * @return the number of pins knocked down associated with this event
      */
     public int pinsDownOnThisThrow() {
         return pinsDownThisThrow;

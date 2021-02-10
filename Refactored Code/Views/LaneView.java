@@ -1,3 +1,4 @@
+package Views;
 /* constructs a prototype Lane View */
 
 import javax.swing.*;
@@ -9,6 +10,12 @@ import java.awt.event.WindowEvent;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
+
+import Main.Bowler;
+import Main.Lane;
+import Main.LaneEvent;
+import Main.LaneObserver;
+import Main.Party;
 
 public class LaneView implements LaneObserver, ActionListener {
     JFrame frame;
@@ -119,7 +126,7 @@ public class LaneView implements LaneObserver, ActionListener {
     }
 
     public void receiveLaneEvent(LaneEvent le) {
-        if (lane.isPartyAssigned()) {
+        if (lane.isPartyAssigned() && !lane.isGameFinished()) {
             int numBowlers = le.getParty().getMembers().size();
             while (!initDone) {
                 //System.out.println("chillin' here.");

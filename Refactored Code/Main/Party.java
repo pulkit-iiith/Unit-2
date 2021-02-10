@@ -1,4 +1,6 @@
+package Main;
 /*
+
  * Party.java
  *
  * Version:

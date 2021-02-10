@@ -1,3 +1,4 @@
+package Main;
 /* BowlerFile.java
  *
  *  Version:
@@ -17,9 +18,9 @@ import java.util.Vector;
 
 /** Class for interfacing with Bowler database. */
 
-class BowlerFile {
+public class BowlerFile {
     /** The location of the bowler database. */
-    private static final String BOWLER_DAT = "BOWLERS.DAT";
+    private static final String BOWLER_DAT = "../BOWLERS.DAT";
 
     /**
      * Retrieves bowler information from the database and returns a Bowler objects with populated fields.
