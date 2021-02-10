@@ -7,27 +7,29 @@ package Main;
  */
 
 public class Score {
-    private final String nick;
-    private final String date;
-    private final String score;
+    private String nick;
+    private String date;
+    private String score;
 
-    public Score(String nick, String date, String score) {
-        this.nick = nick;
-        this.date = date;
-        this.score = score;
+    public Score( String nick, String date, String score ) {
+		this.nick=nick;
+		this.date=date;
+		this.score=score;
     }
 
-/** Public String getNickName() { return nick; }. */
-
-    public String getDate() {
-        return date;
+    public String getNickName() {
+        return nick;  
     }
 
-    public String getScore() {
-        return score;
-    }
+	public String getDate() {
+		return date;
+	}
+	
+	public String getScore() {
+		return score;
+	}
 
-    public String toString() {
-        return nick + "\t" + date + "\t" + score;
-    }
+	public String toString() {
+		return nick + "\t" + date + "\t" + score;
+	}
 }

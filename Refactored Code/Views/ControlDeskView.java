@@ -3,174 +3,158 @@ package Views;
 
 /* Class for representation of the control desk */
 
-import javax.swing.*;
-
-import javax.swing.border.TitledBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Vector;
-
+import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.border.*;
 import Main.ControlDesk;
-import Main.ControlDeskEvent;
-import Main.ControlDeskObserver;
 import Main.Lane;
-import Main.Pinsetter;
 
-public class ControlDeskView implements ActionListener, ControlDeskObserver {
-    private JButton addParty;
+import java.util.*;
+
+public class ControlDeskView implements ActionListener, Observer {
+	private JButton addParty;
 	private JButton finished;
 	private JButton assign;
-    private JFrame win;
-    private JList partyList;
+	private JFrame win;
+	private JList partyList;
+	/** The maximum number of members in a party. */
+	private int maxMembers;
+	private ControlDesk controlDesk;
 
-    /** The maximum number of members in a party. */
-    private int maxMembers;
+	/** Displays a GUI representation of the ControlDesk. */
+	public ControlDeskView(ControlDesk controlDesk, int maxMembers) {
+		this.controlDesk = controlDesk;
+		this.maxMembers = maxMembers;
+		int numLanes = controlDesk.getNumLanes();
 
-    private ControlDesk controlDesk;
+		win = new JFrame("Control Desk");
+		win.getContentPane().setLayout(new BorderLayout());
+		((JPanel) win.getContentPane()).setOpaque(false);
 
-    /** Displays a GUI representation of the ControlDesk. */
+		JPanel colPanel = new JPanel();
+		colPanel.setLayout(new BorderLayout());
 
-    public ControlDeskView(ControlDesk controlDesk, int maxMembers) {
-        this.controlDesk = controlDesk;
-        this.maxMembers = maxMembers;
-        int numLanes = controlDesk.getNumLanes();
+		// Controls Panel
+		JPanel controlsPanel = new JPanel();
+		controlsPanel.setLayout(new GridLayout(3, 1));
+		controlsPanel.setBorder(new TitledBorder("Controls"));
 
-        win = new JFrame("Control Desk");
-        win.getContentPane().setLayout(new BorderLayout());
-        ((JPanel) win.getContentPane()).setOpaque(false);
+		addParty = new JButton("Add Party");
+		JPanel addPartyPanel = new JPanel();
+		addPartyPanel.setLayout(new FlowLayout());
+		addParty.addActionListener(this);
+		addPartyPanel.add(addParty);
+		controlsPanel.add(addPartyPanel);
 
-        JPanel colPanel = new JPanel();
-        colPanel.setLayout(new BorderLayout());
+		assign = new JButton("Assign Lanes");
+		JPanel assignPanel = new JPanel();
+		assignPanel.setLayout(new FlowLayout());
+		assign.addActionListener(this);
+		assignPanel.add(assign);
 
-        // Controls Panel
-        JPanel controlsPanel = new JPanel();
-        controlsPanel.setLayout(new GridLayout(3, 1));
-        controlsPanel.setBorder(new TitledBorder("Controls"));
+		finished = new JButton("Finished");
+		JPanel finishedPanel = new JPanel();
+		finishedPanel.setLayout(new FlowLayout());
+		finished.addActionListener(this);
+		finishedPanel.add(finished);
+		controlsPanel.add(finishedPanel);
 
-        addParty = new JButton("Add Party");
-        JPanel addPartyPanel = new JPanel();
-        addPartyPanel.setLayout(new FlowLayout());
-        addParty.addActionListener(this);
-        addPartyPanel.add(addParty);
-        controlsPanel.add(addPartyPanel);
+		// Lane Status Panel
+		JPanel laneStatusPanel = new JPanel();
+		laneStatusPanel.setLayout(new GridLayout(numLanes, 1));
+		laneStatusPanel.setBorder(new TitledBorder("Lane Status"));
 
-        assign = new JButton("Assign Lanes");
-        JPanel assignPanel = new JPanel();
-        assignPanel.setLayout(new FlowLayout());
-        assign.addActionListener(this);
-        assignPanel.add(assign);
-//		controlsPanel.add(assignPanel);
-
-        finished = new JButton("Finished");
-        JPanel finishedPanel = new JPanel();
-        finishedPanel.setLayout(new FlowLayout());
-        finished.addActionListener(this);
-        finishedPanel.add(finished);
-        controlsPanel.add(finishedPanel);
-
-        // Lane Status Panel
-        JPanel laneStatusPanel = new JPanel();
-        laneStatusPanel.setLayout(new GridLayout(numLanes, 1));
-        laneStatusPanel.setBorder(new TitledBorder("Lane Status"));
-
-        HashSet lanes = controlDesk.getLanes();
-        Iterator it = lanes.iterator();
-        int laneCount = 0;
-        Lane curLane;
+		HashSet lanes=controlDesk.getLanes();
+		Iterator it = lanes.iterator();
+		int laneCount=0;
+		Lane curLane;
 		LaneStatusView laneStat;
 		JPanel lanePanel;
 		while (it.hasNext()) {
-            curLane = (Lane) it.next();
-            laneStat = new LaneStatusView(curLane, (laneCount + 1));
-            curLane.subscribe(laneStat);
-            ((Pinsetter) curLane.getPinsetter()).subscribe(laneStat);
-            lanePanel = laneStat.showLane();
-            lanePanel.setBorder(new TitledBorder("Lane" + ++laneCount));
-            laneStatusPanel.add(lanePanel);
-        }
+			curLane = (Lane) it.next();
+			laneStat = new LaneStatusView(curLane,(laneCount+1));
+			curLane.addObserver(laneStat);
+			lanePanel = laneStat.showLane();
+			lanePanel.setBorder(new TitledBorder("Lane" + ++laneCount ));
+			laneStatusPanel.add(lanePanel);
+		}
 
-        // Party Queue Panel
-        JPanel partyPanel = new JPanel();
-        partyPanel.setLayout(new FlowLayout());
-        partyPanel.setBorder(new TitledBorder("Party Queue"));
+		// Party Queue Panel
+		JPanel partyPanel = new JPanel();
+		partyPanel.setLayout(new FlowLayout());
+		partyPanel.setBorder(new TitledBorder("Party Queue"));
 
-        Vector empty = new Vector();
-        empty.add("(Empty)");
+		Vector empty = new Vector();
+		empty.add("(Empty)");
 
-        partyList = new JList(empty);
-        partyList.setFixedCellWidth(120);
-        partyList.setVisibleRowCount(10);
-        JScrollPane partyPane = new JScrollPane(partyList);
-        partyPane.setVerticalScrollBarPolicy(
-                JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        partyPanel.add(partyPane);
-        //		partyPanel.add(partyList);
+		partyList = new JList(empty);
+		partyList.setFixedCellWidth(120);
+		partyList.setVisibleRowCount(10);
+		JScrollPane partyPane = new JScrollPane(partyList);
+		partyPane.setVerticalScrollBarPolicy(
+			JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		partyPanel.add(partyPane);
 
-        // Clean up main panel
-        colPanel.add(controlsPanel, "East");
-        colPanel.add(laneStatusPanel, "Center");
-        colPanel.add(partyPanel, "West");
+		// Clean up main panel
+		colPanel.add(controlsPanel, "East");
+		colPanel.add(laneStatusPanel, "Center");
+		colPanel.add(partyPanel, "West");
 
-        win.getContentPane().add("Center", colPanel);
+		win.getContentPane().add("Center", colPanel);
 
-        win.pack();
+		win.pack();
 
-        /* Close program when this window closes */
-        win.addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent e) {
-                System.exit(0);
-            }
-        });
+		/* Close program when this window closes */
+		win.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				System.exit(0);
+			}
+		});
 
-        // Center Window on Screen
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        win.setLocation(
-                screenSize.width / 2 - win.getSize().width / 2,
-                screenSize.height / 2 - win.getSize().height / 2);
-        win.show();
-    }
+		// Center Window on Screen
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		win.setLocation(
+			screenSize.width / 2 - win.getSize().width / 2,
+			screenSize.height / 2 - win.getSize().height / 2);
+		win.setVisible(true);
+	}
 
-    /**
-     * Handler for actionEvents.
-     *
-     * @param e    the ActionEvent that triggered the handler
-     */
+	/**
+	 * Handler for actionEvents.
+	 *
+	 * @param e	the ActionEvent that triggered the handler
+	 */
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource().equals(addParty)) {
+			AddPartyView addPartyWin = new AddPartyView(this, maxMembers);
+		}
+		if (e.getSource().equals(assign)) {
+			controlDesk.assignLane();
+		}
+		if (e.getSource().equals(finished)) {
+			win.setVisible(false);
+			System.exit(0);
+		}
+	}
 
-    public void actionPerformed(ActionEvent e) {
-        if (e.getSource().equals(addParty)) {
-            AddPartyView addPartyWin = new AddPartyView(this, maxMembers);
-        }
-        if (e.getSource().equals(assign)) {
-            controlDesk.assignLane();
-        }
-        if (e.getSource().equals(finished)) {
-            win.hide();
-            System.exit(0);
-        }
-    }
+	/**
+	 * Receive a new party from andPartyView.
+	 *
+	 * @param addPartyView	the AddPartyView that is providing a new party
+	 */
+	public void updateAddParty(AddPartyView addPartyView) {
+		controlDesk.addPartyQueue(addPartyView.getParty());
+	}
 
-    /**
-     * Receive a new party from andPartyView.
-     *
-     * @param addPartyView    the AddPartyView that is providing a new party
-     */
-
-    public void updateAddParty(AddPartyView addPartyView) {
-        controlDesk.addPartyQueue(addPartyView.getParty());
-    }
-
-    /**
-     * Receive a broadcast from a ControlDesk.
-     *
-     * @param ce    the ControlDeskEvent that triggered the handler
-     */
-
-    public void receiveControlDeskEvent(ControlDeskEvent ce) {
-        partyList.setListData((Vector) ce.getPartyQueue());
-    }
+	@Override
+	public void update(Observable o, Object arg) {
+		ControlDesk cd;
+		try{
+			cd = (ControlDesk)o;
+		}catch(Exception e){
+			return;
+		}
+		partyList.setListData((Vector) cd.getPartyQueue());
+	}
 }
