@@ -1,144 +1,174 @@
 package Views;
 
-import javax.swing.*;
-
-
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
+import java.awt.event.*;
+import java.util.*;
+import javax.swing.*;
 import Main.Bowler;
 import Main.Lane;
-import Main.LaneEvent;
-import Main.LaneObserver;
 import Main.Pinsetter;
 import Main.PinsetterEvent;
-import Main.PinsetterObserver;
 
-public class LaneStatusView implements ActionListener, LaneObserver, PinsetterObserver {
-    int laneNum;
-    boolean laneShowing;
-    boolean psShowing;
-    private final JPanel jp;
-    private final JLabel curBowler;
-    private final JLabel pinsDown;
-    private final JButton viewLane;
-    private final JButton viewPinSetter;
-    private final JButton maintenance;
-    private final PinSetterView psv;
-    private final LaneView lv;
-    private final Lane lane;
+public class LaneStatusView implements ActionListener, Observer {
+	private JPanel jp;
+	private JLabel curBowler;
+	private JLabel pinsDown;
+	private JButton viewLane;
+	private JButton viewPinSetter;
+	private JButton maintenance;
+	private PinSetterView psv;
+	private LaneView lv;
+	private Lane lane;
+	int laneNum;
 
-    public LaneStatusView(Lane lane, int laneNum) {
-        this.lane = lane;
-        this.laneNum = laneNum;
+	boolean laneShowing;
+	boolean psShowing;
 
-        laneShowing = false;
-        psShowing = false;
+	public LaneStatusView(Lane lane, int laneNum ) {
+		this.lane = lane;
+		this.laneNum = laneNum;
 
-        psv = new PinSetterView(laneNum);
-        Pinsetter ps = lane.getPinsetter();
-        ps.subscribe(psv);
+		laneShowing=false;
+		psShowing=false;
+		Pinsetter ps = lane.getPinsetter();
+		psv = new PinSetterView( ps, laneNum );
+		ps.addObserver(this);
+		lv = new LaneView( lane, laneNum );
+		lane.addObserver(lv);
+		jp = new JPanel();
+		jp.setLayout(new FlowLayout());
+		JLabel cLabel = new JLabel( "Now Bowling: " );
+		curBowler = new JLabel( "(no one)" );
+		JLabel fLabel = new JLabel( "Foul: " );
+		JLabel pdLabel = new JLabel( "Pins Down: " );
+		pinsDown = new JLabel( "0" );
 
-        lv = new LaneView(lane, laneNum);
-        lane.subscribe(lv);
+		// Button Panel
+		JPanel buttonPanel = new JPanel();
+		buttonPanel.setLayout(new FlowLayout());
 
-        jp = new JPanel();
-        jp.setLayout(new FlowLayout());
-        JLabel cLabel = new JLabel("Now Bowling: ");
-        curBowler = new JLabel("(no one)");
-        new JLabel("Foul: ");
-        new JLabel(" ");
-        JLabel pdLabel = new JLabel("Pins Down: ");
-        pinsDown = new JLabel("0");
+		Insets buttonMargin = new Insets(4, 4, 4, 4);
 
-        // Button Panel
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new FlowLayout());
+		viewLane = new JButton("View Lane");
+		JPanel viewLanePanel = new JPanel();
+		viewLanePanel.setLayout(new FlowLayout());
+		viewLane.addActionListener(this);
+		viewLanePanel.add(viewLane);
 
-        new Insets(4, 4, 4, 4);
+		viewPinSetter = new JButton("Pinsetter");
+		JPanel viewPinSetterPanel = new JPanel();
+		viewPinSetterPanel.setLayout(new FlowLayout());
+		viewPinSetter.addActionListener(this);
+		viewPinSetterPanel.add(viewPinSetter);
 
-        viewLane = new JButton("View Lane");
-        JPanel viewLanePanel = new JPanel();
-        viewLanePanel.setLayout(new FlowLayout());
-        viewLane.addActionListener(this);
-        viewLanePanel.add(viewLane);
+		maintenance = new JButton(" ");
+		maintenance.setBackground(Color.GREEN);
+		maintenance.setOpaque(true);
+		JPanel maintenancePanel = new JPanel();
+		maintenancePanel.setLayout(new FlowLayout());
+		maintenance.addActionListener(this);
+		maintenancePanel.add(maintenance);
 
-        viewPinSetter = new JButton("Pinsetter");
-        JPanel viewPinSetterPanel = new JPanel();
-        viewPinSetterPanel.setLayout(new FlowLayout());
-        viewPinSetter.addActionListener(this);
-        viewPinSetterPanel.add(viewPinSetter);
+		viewLane.setEnabled( false );
+		viewPinSetter.setEnabled( false );
 
-        maintenance = new JButton("     ");
-        maintenance.setBackground(Color.GREEN);
-        JPanel maintenancePanel = new JPanel();
-        maintenancePanel.setLayout(new FlowLayout());
-        maintenance.addActionListener(this);
-        maintenancePanel.add(maintenance);
+		buttonPanel.add(viewLanePanel);
+		buttonPanel.add(viewPinSetterPanel);
+		buttonPanel.add(maintenancePanel);
 
-        viewLane.setEnabled(false);
-        viewPinSetter.setEnabled(false);
+		jp.add( cLabel );
+		jp.add( curBowler );
+		jp.add( pdLabel );
+		jp.add( pinsDown );
+		jp.add(buttonPanel);
+	}
 
-        buttonPanel.add(viewLanePanel);
-        buttonPanel.add(viewPinSetterPanel);
-        buttonPanel.add(maintenancePanel);
+	public JPanel showLane() {
+		return jp;
+	}
 
-        jp.add(cLabel);
-        jp.add(curBowler);
-//		jp.add( fLabel );
-//		jp.add( foul );
-        jp.add(pdLabel);
-        jp.add(pinsDown);
-
-        jp.add(buttonPanel);
-    }
-
-    public JPanel showLane() {
-        return jp;
-    }
-
-    public void actionPerformed(ActionEvent e) {
-        if (lane.isPartyAssigned() && e.getSource().equals(viewPinSetter)) {
-		    if (!psShowing) {
-		        psv.show();
-		        psShowing = true;
-		    } else {
-		        psv.hide();
-		        psShowing = false;
-		    }
+	public void actionPerformed( ActionEvent e ) {
+		if ( lane.isPartyAssigned() && e.getSource().equals(viewPinSetter) ) {
+			if ( !psShowing ) {
+				psv.show();
+				psShowing=true;
+			} else if ( psShowing ) {
+				psv.hide();
+				psShowing=false;
+			}
 		}
-        if (e.getSource().equals(viewLane) && lane.isPartyAssigned()) {
-		    if (!laneShowing) {
-		        lv.show();
-		        laneShowing = true;
-		    } else {
-		        lv.hide();
-		        laneShowing = false;
-		    }
+		if (e.getSource().equals(viewLane) && lane.isPartyAssigned()) { 
+			if ( !laneShowing ) {
+				lv.show();
+				laneShowing=true;
+			} else if ( laneShowing ) {
+				lv.hide();
+				laneShowing=false;
+			}
 		}
-        if (e.getSource().equals(maintenance) && lane.isPartyAssigned()) {
-		    lane.unPauseGame();
-		    maintenance.setBackground(Color.GREEN);
+		if (e.getSource().equals(maintenance)) {
+			if ( lane.isGameIsHalted() ) {
+				lane.unPauseGame();
+				maintenance.setBackground( Color.GREEN );
+			}
+			else{
+				lane.pauseGame();
+				maintenance.setBackground( Color.RED );
+			}
 		}
-    }
+	}
 
-    public void receiveLaneEvent(LaneEvent le) {
-        curBowler.setText(le.getBowler().getNickName());
-        if (le.isMechanicalProblem()) {
-            maintenance.setBackground(Color.RED);
-        }
-        if (!lane.isPartyAssigned()) {
-            viewLane.setEnabled(false);
-            viewPinSetter.setEnabled(false);
-        } else {
-            viewLane.setEnabled(true);
-            viewPinSetter.setEnabled(true);
-        }
-    }
-
-    public void receivePinsetterEvent(PinsetterEvent pe) {
-        pinsDown.setText(Integer.valueOf(pe.totalPinsDown()).toString());
-//		foul.setText( ( new Boolean(pe.isFoulCommited()) ).toString() );
-    }
+	@Override
+	public void update(Observable o, Object arg) {
+		if(o instanceof Pinsetter){
+			PinsetterEvent pe = (PinsetterEvent)arg;
+			pinsDown.setText( new Integer(pe.totalPinsDown()).toString() );
+		}
+		else if(o instanceof Lane){
+			Lane le = (Lane)o;
+			if(lane.isGameFinished() && lane.isPartyAssigned()){ // Start end of game routine
+				EndGamePrompt egp = new EndGamePrompt( ((Bowler) le.getParty().getMembers().get(0)).getNickName() + "'s Party" );
+				int result = egp.getResult();
+				egp.distroy();
+				egp = null;	
+				switch (result) {
+				case 1:
+					lane.resetScores();
+					lane.resetBowlerIterator();
+					break;
+				case 2:
+					Vector printVector;
+					EndGameReport egr = new EndGameReport( ((Bowler)le.getParty().getMembers().get(0)).getNickName() + "'s Party", le.getParty());
+					printVector = egr.getResult();
+					Iterator scoreIt = le.getParty().getMembers().iterator();
+					lane.clearLane();
+					int myIndex = 0;
+					while (scoreIt.hasNext()){
+						Bowler thisBowler = (Bowler)scoreIt.next();
+						ScoreReport sr = new ScoreReport( thisBowler, lane.getFinalScores()[myIndex++], lane.getGameNumber() );
+						sr.sendEmail(thisBowler.getEmail());
+						Iterator printIt = printVector.iterator();
+						while (printIt.hasNext()){
+							if (thisBowler.getNick() == (String)printIt.next()){
+								System.out.println("Printing " + thisBowler.getNick());
+								sr.sendPrintout();
+							}
+						}
+					}
+					break;
+				}
+			}				
+			curBowler.setText(le.getCurrentThrower().getNickName());
+			if ( le.isGameIsHalted() ) {
+				maintenance.setBackground( Color.RED );
+			}	
+			if ( !lane.isPartyAssigned() ) {
+				viewLane.setEnabled( false );
+				viewPinSetter.setEnabled( false );
+			} else {
+				viewLane.setEnabled( true );
+				viewPinSetter.setEnabled( true );
+			}
+		}
+	}	
 }

@@ -2,147 +2,137 @@ package Views;
 
 /* Class for GUI components need to add a patron */
 
-import javax.swing.*;
-import javax.swing.border.TitledBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.border.*;
 
+/** Class for GUI components need to add a patron. */
 public class NewPatronView implements ActionListener {
-
-    private JFrame win;
-    private JButton abort;
-
+	private JFrame win;
+	private JButton abort;
 	private JButton finished;
-    private JLabel nickLabel;
-
+	private JLabel nickLabel;
 	private JLabel fullLabel;
-
 	private JLabel emailLabel;
-    private JTextField nickField;
-
+	private JTextField nickField;
 	private JTextField fullField;
-
 	private JTextField emailField;
-    private String nick;
-
+	private String nick;
 	private String full;
-
 	private String email;
 
-    private boolean done;
+	private boolean done;
 
-//    private String selectedNick;
+	private AddPartyView addParty;
 
-//	private String selectedMember;
-    private final AddPartyView addParty;
+	public NewPatronView(AddPartyView v) {
+		addParty = v;	
+		done = false;
+		
+		win = new JFrame("Add Patron");
+		win.getContentPane().setLayout(new BorderLayout());
+		((JPanel) win.getContentPane()).setOpaque(false);
 
-    public NewPatronView(AddPartyView v) {
-        addParty = v;
-        done = false;
+		JPanel colPanel = new JPanel();
+		colPanel.setLayout(new BorderLayout());
 
-        win = new JFrame("Add Patron");
-        win.getContentPane().setLayout(new BorderLayout());
-        ((JPanel) win.getContentPane()).setOpaque(false);
+		// Patron Panel
+		JPanel patronPanel = new JPanel();
+		patronPanel.setLayout(new GridLayout(3, 1));
+		patronPanel.setBorder(new TitledBorder("Your Info"));
 
-        JPanel colPanel = new JPanel();
-        colPanel.setLayout(new BorderLayout());
+		JPanel nickPanel = new JPanel();
+		nickPanel.setLayout(new FlowLayout());
+		nickLabel = new JLabel("Nick Name");
+		nickField = new JTextField("", 15);
+		nickPanel.add(nickLabel);
+		nickPanel.add(nickField);
 
-        // Patron Panel
-        JPanel patronPanel = new JPanel();
-        patronPanel.setLayout(new GridLayout(3, 1));
-        patronPanel.setBorder(new TitledBorder("Your Info"));
+		JPanel fullPanel = new JPanel();
+		fullPanel.setLayout(new FlowLayout());
+		fullLabel = new JLabel("Full Name");
+		fullField = new JTextField("", 15);
+		fullPanel.add(fullLabel);
+		fullPanel.add(fullField);
 
-        JPanel nickPanel = new JPanel();
-        nickPanel.setLayout(new FlowLayout());
-        nickLabel = new JLabel("Nick Name");
-        nickField = new JTextField("", 15);
-        nickPanel.add(nickLabel);
-        nickPanel.add(nickField);
+		JPanel emailPanel = new JPanel();
+		emailPanel.setLayout(new FlowLayout());
+		emailLabel = new JLabel("E-Mail");
+		emailField = new JTextField("", 15);
+		emailPanel.add(emailLabel);
+		emailPanel.add(emailField);
 
-        JPanel fullPanel = new JPanel();
-        fullPanel.setLayout(new FlowLayout());
-        fullLabel = new JLabel("Full Name");
-        fullField = new JTextField("", 15);
-        fullPanel.add(fullLabel);
-        fullPanel.add(fullField);
+		patronPanel.add(nickPanel);
+		patronPanel.add(fullPanel);
+		patronPanel.add(emailPanel);
 
-        JPanel emailPanel = new JPanel();
-        emailPanel.setLayout(new FlowLayout());
-        emailLabel = new JLabel("E-Mail");
-        emailField = new JTextField("", 15);
-        emailPanel.add(emailLabel);
-        emailPanel.add(emailField);
+		// Button Panel
+		JPanel buttonPanel = new JPanel();
+		buttonPanel.setLayout(new GridLayout(4, 1));
 
-        patronPanel.add(nickPanel);
-        patronPanel.add(fullPanel);
-        patronPanel.add(emailPanel);
+		Insets buttonMargin = new Insets(4, 4, 4, 4);
 
-        // Button Panel
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new GridLayout(4, 1));
+		finished = new JButton("Add Patron");
+		JPanel finishedPanel = new JPanel();
+		finishedPanel.setLayout(new FlowLayout());
+		finished.addActionListener(this);
+		finishedPanel.add(finished);
 
+		abort = new JButton("Abort");
+		JPanel abortPanel = new JPanel();
+		abortPanel.setLayout(new FlowLayout());
+		abort.addActionListener(this);
+		abortPanel.add(abort);
 
-        finished = new JButton("Add Patron");
-        JPanel finishedPanel = new JPanel();
-        finishedPanel.setLayout(new FlowLayout());
-        finished.addActionListener(this);
-        finishedPanel.add(finished);
+		buttonPanel.add(abortPanel);
+		buttonPanel.add(finishedPanel);
 
-        abort = new JButton("Abort");
-        JPanel abortPanel = new JPanel();
-        abortPanel.setLayout(new FlowLayout());
-        abort.addActionListener(this);
-        abortPanel.add(abort);
+		// Clean up main panel
+		colPanel.add(patronPanel, "Center");
+		colPanel.add(buttonPanel, "East");
 
-        buttonPanel.add(abortPanel);
-        buttonPanel.add(finishedPanel);
+		win.getContentPane().add("Center", colPanel);
 
-        // Clean up main panel
-        colPanel.add(patronPanel, "Center");
-        colPanel.add(buttonPanel, "East");
+		win.pack();
 
-        win.getContentPane().add("Center", colPanel);
+		// Center Window on Screen
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		win.setLocation(
+			screenSize.width / 2 - win.getSize().width / 2,
+			screenSize.height / 2 - win.getSize().height / 2);
+		win.setVisible(true);
+	}
 
-        win.pack();
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource().equals(abort)) {
+			done = true;
+			win.setVisible(false);
+		}
 
-        // Center Window on Screen
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        win.setLocation(
-                screenSize.width / 2 - win.getSize().width / 2,
-                screenSize.height / 2 - win.getSize().height / 2);
-        win.setVisible(true);
-    }
+		if (e.getSource().equals(finished)) {
+			nick = nickField.getText();
+			full = fullField.getText();
+			email = emailField.getText();
+			done = true;
+			addParty.updateNewPatron( this );
+			win.setVisible(false);
+		}
+	}
 
-    public void actionPerformed(ActionEvent e) {
-        if (e.getSource().equals(abort)) {
-            done = true;
-            win.setVisible(false);
-        }
+	public boolean done() {
+		return done;
+	}
 
-        if (e.getSource().equals(finished)) {
-            nick = nickField.getText();
-            full = fullField.getText();
-            email = emailField.getText();
-            done = true;
-            addParty.updateNewPatron(this);
-            win.setVisible(false);
-        }
-    }
+	public String getNick() {
+		return nick;
+	}
 
-    public boolean done() {
-        return done;
-    }
+	public String getFull() {
+		return full;
+	}
 
-    public String getNick() {
-        return nick;
-    }
-
-    public String getFull() {
-        return full;
-    }
-
-    public String getEmail() {
-        return email;
-    }
+	public String getEmail() {
+		return email;
+	}
 }
