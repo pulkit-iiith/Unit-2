@@ -1,6 +1,4 @@
 package Main;
-<<<<<<< HEAD
-
 /* Container that holds bowlers */
 
 import java.util.*;
