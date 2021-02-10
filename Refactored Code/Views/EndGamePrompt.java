@@ -1,4 +1,5 @@
 package Views;
+<<<<<<< HEAD
 /*
 
  * To change this generated comment edit the template variable "typecomment":
@@ -6,6 +7,8 @@ package Views;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
+=======
+>>>>>>> main
 
 import java.awt.*;
 import java.awt.event.*;

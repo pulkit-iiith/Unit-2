@@ -1,5 +1,4 @@
 package Views;
-/* PinSetterView/.java Version: $Id$ Revision: $Log$ */
 
 import java.awt.*;
 import javax.swing.*;
