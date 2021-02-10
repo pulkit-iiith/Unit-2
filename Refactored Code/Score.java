@@ -6,28 +6,27 @@
  */
 
 public class Score {
-    private String nick;
-    private String date;
-    private String score;
+    private final String nick;
+    private final String date;
+    private final String score;
 
-    public Score( String nick, String date, String score ) {
-		this.nick=nick;
-		this.date=date;
-		this.score=score;
+    public Score(String nick, String date, String score) {
+        this.nick = nick;
+        this.date = date;
+        this.score = score;
     }
 
-    public String getNickName() {
-        return nick;  
+/** Public String getNickName() { return nick; }. */
+
+    public String getDate() {
+        return date;
     }
 
-	public String getDate() {
-		return date;
-	}
-		public String getScore() {
-		return score;
-	}
+    public String getScore() {
+        return score;
+    }
 
-	public String toString() {
-		return nick + "\t" + date + "\t" + score;
-	}
+    public String toString() {
+        return nick + "\t" + date + "\t" + score;
+    }
 }

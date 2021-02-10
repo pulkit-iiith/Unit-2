@@ -1,111 +1,124 @@
-import java.io.*;
-import java.util.Vector;
+import java.awt.print.PrinterException;
+import java.awt.print.PrinterJob;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.Socket;
 import java.util.Iterator;
-import java.net.*;
-import java.awt.*;
-import java.awt.print.*;
+import java.util.Vector;
 
 public class ScoreReport {
-	private String content;
-		public ScoreReport( Bowler bowler, int[] scores, int games ) {
-		String nick = bowler.getNick();
-		String full = bowler.getFullName();
-		Vector v = null;
-		try{
-			v = ScoreHistoryFile.getScores(nick);
-		} catch (Exception e){System.err.println("Error: " + e);}
-				Iterator scoreIt = v.iterator();
-				content = "";
-		content += "--Lucky Strike Bowling Alley Score Report--\n";
-		content += "\n";
-		content += "Report for " + full + ", aka \"" + nick + "\":\n";
-		content += "\n";
-		content += "Final scores for this session: ";
-		content += scores[0];
-		for (int i = 1; i < games; i++){
-			content += ", " + scores[i];
-		}
-		content += ".\n";
-		content += "\n";
-		content += "\n";
-		content += "Previous scores by date: \n";
-		Score score;
-		while (scoreIt.hasNext()){
-			score = (Score) scoreIt.next();
-			content += "  " + score.getDate() + " - " +  score.getScore();
-			content += "\n";
-		}
-		content += "\n\n";
-		content += "Thank you for your continuing patronage.";
-	}
+    private String content;
 
-	public void sendEmail(String recipient) {
-		try {
-			Socket s = new Socket("osfmail.rit.edu", 25);
-			BufferedReader in =
-				new BufferedReader(
-					new InputStreamReader(s.getInputStream(), "8859_1"));
-			BufferedWriter out =
-				new BufferedWriter(
-					new OutputStreamWriter(s.getOutputStream(), "8859_1"));
+    public ScoreReport(Bowler bowler, int[] scores, int games) {
+        String nick = bowler.getNick();
+        String full = bowler.getFullName();
+        Vector v = null;
+        try {
+            v = ScoreHistoryFile.getScores(nick);
+        } catch (Exception e) {
+            System.err.println("Error: " + e);
+        }
 
-			String boundary = "DataSeparatorString";
+        assert v != null;
+        Iterator scoreIt = v.iterator();
 
-			// here you are supposed to send your username
-			sendln(in, out, "HELO world");
-			sendln(in, out, "MAIL FROM: <mda2376@rit.edu>");
-			sendln(in, out, "RCPT TO: <" + recipient + ">");
-			sendln(in, out, "DATA");
-			sendln(out, "Subject: Bowling Score Report ");
-			sendln(out, "From: <Lucky Strikes Bowling Club>");
+        content = "";
+        content += "--Lucky Strike Bowling Alley Score Report--\n";
+        content += "\n";
+        content += "Report for " + full + ", aka \"" + nick + "\":\n";
+        content += "\n";
+        content += "Final scores for this session: ";
+        content += scores[0];
+        StringBuilder sb = new StringBuilder();
+        for (int i = 1; i < games; i++) {
+            sb.append(", ").append(scores[i]);
+        }
+        content += sb.toString();
+        content += ".\n";
+        content += "\n";
+        content += "\n";
+        content += "Previous scores by date: \n";
+        StringBuilder newsb = new StringBuilder();
+        Score score;
+		while (scoreIt.hasNext()) {
+            score = (Score) scoreIt.next();
+            newsb.append("  ").append(score.getDate()).append(" - ").append(score.getScore());
+            newsb.append("\n");
+        }
+        content += newsb.toString();
+        content += "\n\n";
+        content += "Thank you for your continuing patronage.";
+    }
 
-			sendln(out, "Content-Type: text/plain; charset=\"us-ascii\"\r\n");
-			sendln(out, content + "\n\n");
-			sendln(out, "\r\n");
+    public void sendEmail(String recipient) {
+        try {
+            Socket s = new Socket("osfmail.rit.edu", 25);
+            BufferedReader in =
+                    new BufferedReader(
+                            new InputStreamReader(s.getInputStream(), "8859_1"));
+            BufferedWriter out =
+                    new BufferedWriter(
+                            new OutputStreamWriter(s.getOutputStream(), "8859_1"));
 
-			sendln(in, out, ".");
-			sendln(in, out, "QUIT");
-			s.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+//            String boundary = "DataSeparatorString";
 
-	public void sendPrintout() {
-		PrinterJob job = PrinterJob.getPrinterJob();
+            // here you are supposed to send your username
+            sendln(in, out, "HELO world");
+            sendln(in, out, "MAIL FROM: <mda2376@rit.edu>");
+            sendln(in, out, "RCPT TO: <" + recipient + ">");
+            sendln(in, out, "DATA");
+            sendln(out, "Subject: Bowling Score Report ");
+            sendln(out, "From: <Lucky Strikes Bowling Club>");
 
-		PrintableText printobj = new PrintableText(content);
+            sendln(out, "Content-Type: text/plain; charset=\"us-ascii\"\r\n");
+            sendln(out, content + "\n\n");
+            sendln(out, "\r\n");
 
-		job.setPrintable(printobj);
+            sendln(in, out, ".");
+            sendln(in, out, "QUIT");
+            s.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-		if (job.printDialog()) {
-			try {
-				job.print();
-			} catch (PrinterException e) {
-				System.out.println(e);
-			}
-		}
-	}
+    public void sendPrintout() {
+        PrinterJob job = PrinterJob.getPrinterJob();
 
-	public void sendln(BufferedReader in, BufferedWriter out, String s) {
-		try {
-			out.write(s + "\r\n");
-			out.flush();
-			// System.out.println(s);
-			s = in.readLine();
-			// System.out.println(s);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+        PrintableText printobj = new PrintableText(content);
 
-	public void sendln(BufferedWriter out, String s) {
-		try {
-			out.write(s + "\r\n");
-			out.flush();
-			System.out.println(s);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+        job.setPrintable(printobj);
+
+        if (job.printDialog()) {
+            try {
+                job.print();
+            } catch (PrinterException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void sendln(BufferedReader in, BufferedWriter out, String s) {
+        try {
+            out.write(s + "\r\n");
+            out.flush();
+            // System.out.println(s);
+            in.readLine();
+            // System.out.println(s);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void sendln(BufferedWriter out, String s) {
+        try {
+            out.write(s + "\r\n");
+            out.flush();
+            System.out.println(s);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

@@ -5,99 +5,97 @@
  * Window>Preferences>Java>Code Generation.
  */
 
-import java.awt.*;
-import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.border.*;
-import javax.swing.event.*;
-
-import java.util.*;
-import java.text.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class EndGamePrompt implements ActionListener {
-	private JFrame win;
-	private JButton yesButton;
-	private JButton noButton;
+    private final JFrame win;
+    private final JButton yesButton;
+    private final JButton noButton;
 
-	private int result;
+    private int result;
 
-	private String selectedNick;
-	private String selectedMember;
+/** Private String selectedNick, selectedMember;. */
 
-	public EndGamePrompt( String partyName ) {
-		result = 0;
-		win = new JFrame("Another Game for " + partyName + "?" );
-		win.getContentPane().setLayout(new BorderLayout());
-		((JPanel) win.getContentPane()).setOpaque(false);
+    public EndGamePrompt(String partyName) {
+        result = 0;
 
-		JPanel colPanel = new JPanel();
-		colPanel.setLayout(new GridLayout( 2, 1 ));
+        win = new JFrame("Another Game for " + partyName + "?");
+        win.getContentPane().setLayout(new BorderLayout());
+        ((JPanel) win.getContentPane()).setOpaque(false);
 
-		// Label Panel
-		JPanel labelPanel = new JPanel();
-		labelPanel.setLayout(new FlowLayout());
-				JLabel message = new JLabel( "Party " + partyName 
-			+ " has finished bowling.\nWould they like to bowl another game?" );
+        JPanel colPanel = new JPanel();
+        colPanel.setLayout(new GridLayout(2, 1));
 
-		labelPanel.add( message );
+        // Label Panel
+        JPanel labelPanel = new JPanel();
+        labelPanel.setLayout(new FlowLayout());
 
-		// Button Panel
-		JPanel buttonPanel = new JPanel();
-		buttonPanel.setLayout(new GridLayout(1, 2));
+        JLabel message = new JLabel("Party " + partyName
+                + " has finished bowling.\nWould they like to bowl another game?");
 
-		Insets buttonMargin = new Insets(4, 4, 4, 4);
+        labelPanel.add(message);
 
-		yesButton = new JButton("Yes");
-		JPanel yesButtonPanel = new JPanel();
-		yesButtonPanel.setLayout(new FlowLayout());
-		yesButton.addActionListener(this);
-		yesButtonPanel.add(yesButton);
+        // Button Panel
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new GridLayout(1, 2));
 
-		noButton = new JButton("No");
-		JPanel noButtonPanel = new JPanel();
-		noButtonPanel.setLayout(new FlowLayout());
-		noButton.addActionListener(this);
-		noButtonPanel.add(noButton);
+//        Insets buttonMargin = new Insets(4, 4, 4, 4);
 
-		buttonPanel.add(yesButton);
-		buttonPanel.add(noButton);
+        yesButton = new JButton("Yes");
+        JPanel yesButtonPanel = new JPanel();
+        yesButtonPanel.setLayout(new FlowLayout());
+        yesButton.addActionListener(this);
+        yesButtonPanel.add(yesButton);
 
-		// Clean up main panel
-		colPanel.add(labelPanel);
-		colPanel.add(buttonPanel);
+        noButton = new JButton("No");
+        JPanel noButtonPanel = new JPanel();
+        noButtonPanel.setLayout(new FlowLayout());
+        noButton.addActionListener(this);
+        noButtonPanel.add(noButton);
 
-		win.getContentPane().add("Center", colPanel);
+        buttonPanel.add(yesButton);
+        buttonPanel.add(noButton);
 
-		win.pack();
+        // Clean up main panel
+        colPanel.add(labelPanel);
+        colPanel.add(buttonPanel);
 
-		// Center Window on Screen
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		win.setLocation(
-			screenSize.width / 2 - win.getSize().width / 2,
-			screenSize.height / 2 - win.getSize().height / 2);
-		win.show();
-	}
+        win.getContentPane().add("Center", colPanel);
 
-	public void actionPerformed(ActionEvent e) {
-		if (e.getSource().equals(yesButton)) {		
-			result=1;
-		}
-		if (e.getSource().equals(noButton)) {		
-			result=2;
-		}
-	}
+        win.pack();
 
-	public int getResult() {
-		while ( result == 0 ) {
-			try {
-				Thread.sleep(10);
-			} catch ( InterruptedException e ) {
-				System.err.println( "Interrupted" );
-			}
-		}
-		return result;	
-	}
-		public void distroy() {
-		win.hide();
-	}
-	}
+        // Center Window on Screen
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        win.setLocation(
+                screenSize.width / 2 - win.getSize().width / 2,
+                screenSize.height / 2 - win.getSize().height / 2);
+        win.setVisible(true);
+    }
+
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource().equals(yesButton)) {
+            result = 1;
+        }
+        if (e.getSource().equals(noButton)) {
+            result = 2;
+        }
+    }
+
+    public int getResult() {
+        while (result == 0) {
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                System.err.println("Interrupted");
+            }
+        }
+        return result;
+    }
+
+    public void destroy() {
+        win.setVisible(false);
+    }
+}

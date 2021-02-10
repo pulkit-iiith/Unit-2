@@ -10,5 +10,5 @@
  */
 
 public interface LaneObserver {
-	void receiveLaneEvent(LaneEvent le);
+    void receiveLaneEvent(LaneEvent le);
 }

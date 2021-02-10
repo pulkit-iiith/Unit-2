@@ -15,9 +15,10 @@
  */
 
 public interface PinsetterObserver {
-	/** RecievePinsetterEvent()
-	 * 
-	 * defines the method for an object torecieve a pinsetter event.
-	 */
-	void receivePinsetterEvent(PinsetterEvent pe);
+    /**
+     * RecievePinsetterEvent()
+     * <p>
+     * defines the method for an object torecieve a pinsetter event.
+     */
+    void receivePinsetterEvent(PinsetterEvent pe);
 }
