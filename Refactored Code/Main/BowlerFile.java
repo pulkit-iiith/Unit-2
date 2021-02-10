@@ -62,7 +62,6 @@ public class BowlerFile {
 		String data;
 		String[] bowler;
 		while ((data = in.readLine()) != null) {
-<<<<<<< HEAD
 			// File format is nick\tfname\te-mail
 			bowler = data.split("\t");
 			//"Nick: bowler[0] Full: bowler[1] email: bowler[2]
@@ -72,13 +71,3 @@ public class BowlerFile {
 		return allBowlers;
 	}
 }
-=======
-            // File format is nick\tfname\te-mail
-            bowler = data.split("\t");
-            //"Nick: bowler[0] Full: bowler[1] email: bowler[2]
-            allBowlers.add(bowler[0]);
-        }
-        return allBowlers;
-    }
-}
->>>>>>> main
