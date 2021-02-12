@@ -5,7 +5,7 @@ import java.util.Vector;
 
 public class ScoreHistoryFile {
 
-	private static String SCOREHISTORY_DAT = "D:\\Software Engineering\\SWE_Project\\Refactored Code\\SCOREHISTORY.DAT";
+	private static String SCOREHISTORY_DAT = "SCOREHISTORY.DAT";
 
 	public static void addScore(String nick, String date, String score) throws IOException, FileNotFoundException {
 		String data = nick + "\t" + date + "\t" + score + "\n";
