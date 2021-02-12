@@ -7,7 +7,7 @@ import java.util.Vector;
 
 public class BowlerFile {
 	/** The location of the bowelr database. */
-	private static String BOWLER_DAT = "D:\\Software Engineering\\SWE_Project\\Refactored Code\\BOWLERS.DAT";
+	private static String BOWLER_DAT = "BOWLERS.DAT";
 
 	/**
 	 * Retrieves bowler information from the database and returns a Bowler objects with populated fields.
