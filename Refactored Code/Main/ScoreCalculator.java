@@ -2,13 +2,13 @@ package Main;
 
 public class ScoreCalculator {
 
-	private float[][] cumulScores;  //reference to be mutated.
+	private int[][] cumulScores;  //reference to be mutated.
 
 	 /**
 	 * Constructor
 	 */
-	public ScoreCalculator(float[][] cumulScores2){
-		this.cumulScores = cumulScores2;  // Operate on Lane's reference
+	public ScoreCalculator(int[][] scores){
+		this.cumulScores = scores;  // Operate on Lane's reference
 	}
 
 	/*
@@ -127,7 +127,7 @@ public class ScoreCalculator {
 
 	/*
 	* This is the normal case helper method to calculate the stike score of the
-	* current bolwer.
+	* current bowler.
 	*
 	* @param index         : the current throw or roll.
 	* @param currentScores : the most up to date record of scores.
