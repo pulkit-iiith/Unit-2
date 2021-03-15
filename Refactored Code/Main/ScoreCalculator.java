@@ -2,13 +2,13 @@ package Main;
 
 public class ScoreCalculator {
 
-	private int[][] cumulScores;  //reference to be mutated.
+	private float[][] cumulScores;  //reference to be mutated.
 
 	 /**
 	 * Constructor
 	 */
-	public ScoreCalculator(int[][] scores){
-		this.cumulScores = scores;  // Operate on Lane's reference
+	public ScoreCalculator(float[][] cumulScores2){
+		this.cumulScores = cumulScores2;  // Operate on Lane's reference
 	}
 
 	/*
@@ -24,6 +24,7 @@ public class ScoreCalculator {
 	* @param roll        : the current roll or throw that the current bowler is on.
 	* @param pinsDown    : the total number of pins that were knocked down by the last throw.
 	*/
+	
 	protected void calculateGame(int[] bowlersScores, int bowlerIndex, int frameNumber, int roll, int pinsDown ){
 		int currentRoll = (2 * frameNumber) + roll;
 		// Reset the previous record of scores
@@ -51,6 +52,25 @@ public class ScoreCalculator {
 					prevScore += normal(i, bowlersScores);
 				}
 			}
+			
+			// Check for Penalty
+			if(i > 1) {
+				// check consecutive 2 throws 0 or not
+				if(bowlersScores[i] == 0 && bowlersScores[i] == bowlersScores[i - 1]) {
+					if(i == 2) {
+						prevScore -= bowlersScores[2] / 2;
+					}
+					else {
+						int maximum = bowlersScores[0];
+						int idx = 1;
+						while(idx < i - 1) {
+							maximum = Math.max(maximum, bowlersScores[idx]);
+							idx++;
+						prevScore -= maximum / 2;
+						}
+					}
+				}
+			}
 
 			frameIndex = i / 2 ;
 			if(i > 19){ // Last frame could have three throws
@@ -62,8 +82,8 @@ public class ScoreCalculator {
 	}
 
 	/*
-	* This is the strike helper method to calculate the stike score of the
-	* current bolwer.
+	* This is the strike helper method to calculate the strike score of the
+	* current bowler.
 	*
 	* @param index         : the current throw or roll.
 	* @param currentScores : the most up to date record of scores.
