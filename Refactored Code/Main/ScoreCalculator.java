@@ -66,8 +66,8 @@ public class ScoreCalculator {
 						while(idx < i - 1) {
 							maximum = Math.max(maximum, bowlersScores[idx]);
 							idx++;
-						prevScore -= maximum / 2;
 						}
+						prevScore -= maximum / 2;
 					}
 				}
 			}
