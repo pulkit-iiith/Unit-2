@@ -1,44 +1,29 @@
-/* ControlDeskView.java
- *
- *  Version:
- *			$Id$
- * 
- *  Revisions:
- * 		$Log$
- * 
- */
+package Views;
 
-/**
- * Class for representation of the control desk
- *
- */
+/* Class for representation of the control desk */
 
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;
-import javax.swing.event.*;
+import Main.ControlDesk;
+import Main.Lane;
 
 import java.util.*;
 
-public class ControlDeskView implements ActionListener, ControlDeskObserver {
-
-	private JButton addParty, finished, assign;
+public class ControlDeskView implements ActionListener, Observer {
+	private JButton addParty;
+	private JButton finished;
+	private JButton assign;
+	private JButton searchDATABASE;
 	private JFrame win;
 	private JList partyList;
-	
-	/** The maximum  number of members in a party */
+	/** The maximum number of members in a party. */
 	private int maxMembers;
-	
 	private ControlDesk controlDesk;
 
-	/**
-	 * Displays a GUI representation of the ControlDesk
-	 *
-	 */
-
+	/** Displays a GUI representation of the ControlDesk. */
 	public ControlDeskView(ControlDesk controlDesk, int maxMembers) {
-
 		this.controlDesk = controlDesk;
 		this.maxMembers = maxMembers;
 		int numLanes = controlDesk.getNumLanes();
@@ -67,7 +52,6 @@ public class ControlDeskView implements ActionListener, ControlDeskObserver {
 		assignPanel.setLayout(new FlowLayout());
 		assign.addActionListener(this);
 		assignPanel.add(assign);
-//		controlsPanel.add(assignPanel);
 
 		finished = new JButton("Finished");
 		JPanel finishedPanel = new JPanel();
@@ -75,6 +59,15 @@ public class ControlDeskView implements ActionListener, ControlDeskObserver {
 		finished.addActionListener(this);
 		finishedPanel.add(finished);
 		controlsPanel.add(finishedPanel);
+
+		//DATABASE PART
+		searchDATABASE = new JButton("searchDATABASE");
+		JPanel searchDATABASEPanel = new JPanel();
+		searchDATABASEPanel.setLayout(new FlowLayout());
+		searchDATABASE.addActionListener(this);
+		searchDATABASEPanel.add(searchDATABASE);
+		controlsPanel.add(searchDATABASEPanel);
+
 
 		// Lane Status Panel
 		JPanel laneStatusPanel = new JPanel();
@@ -84,12 +77,14 @@ public class ControlDeskView implements ActionListener, ControlDeskObserver {
 		HashSet lanes=controlDesk.getLanes();
 		Iterator it = lanes.iterator();
 		int laneCount=0;
+		Lane curLane;
+		LaneStatusView laneStat;
+		JPanel lanePanel;
 		while (it.hasNext()) {
-			Lane curLane = (Lane) it.next();
-			LaneStatusView laneStat = new LaneStatusView(curLane,(laneCount+1));
-			curLane.subscribe(laneStat);
-			((Pinsetter)curLane.getPinsetter()).subscribe(laneStat);
-			JPanel lanePanel = laneStat.showLane();
+			curLane = (Lane) it.next();
+			laneStat = new LaneStatusView(curLane,(laneCount+1));
+			curLane.addObserver(laneStat);
+			lanePanel = laneStat.showLane();
 			lanePanel.setBorder(new TitledBorder("Lane" + ++laneCount ));
 			laneStatusPanel.add(lanePanel);
 		}
@@ -109,7 +104,6 @@ public class ControlDeskView implements ActionListener, ControlDeskObserver {
 		partyPane.setVerticalScrollBarPolicy(
 			JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		partyPanel.add(partyPane);
-		//		partyPanel.add(partyList);
 
 		// Clean up main panel
 		colPanel.add(controlsPanel, "East");
@@ -128,21 +122,18 @@ public class ControlDeskView implements ActionListener, ControlDeskObserver {
 		});
 
 		// Center Window on Screen
-		Dimension screenSize = (Toolkit.getDefaultToolkit()).getScreenSize();
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		win.setLocation(
-			((screenSize.width) / 2) - ((win.getSize().width) / 2),
-			((screenSize.height) / 2) - ((win.getSize().height) / 2));
-		win.show();
-
+			screenSize.width / 2 - win.getSize().width / 2,
+			screenSize.height / 2 - win.getSize().height / 2);
+		win.setVisible(true);
 	}
 
 	/**
-	 * Handler for actionEvents
+	 * Handler for actionEvents.
 	 *
 	 * @param e	the ActionEvent that triggered the handler
-	 *
 	 */
-
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource().equals(addParty)) {
 			AddPartyView addPartyWin = new AddPartyView(this, maxMembers);
@@ -151,8 +142,11 @@ public class ControlDeskView implements ActionListener, ControlDeskObserver {
 			controlDesk.assignLane();
 		}
 		if (e.getSource().equals(finished)) {
-			win.hide();
+			win.setVisible(false);
 			System.exit(0);
+		}
+		if (e.getSource().equals(searchDATABASE)) {
+			SearchableView searchableView = new SearchableView();
 		}
 	}
 
@@ -160,21 +154,19 @@ public class ControlDeskView implements ActionListener, ControlDeskObserver {
 	 * Receive a new party from andPartyView.
 	 *
 	 * @param addPartyView	the AddPartyView that is providing a new party
-	 *
 	 */
-
 	public void updateAddParty(AddPartyView addPartyView) {
 		controlDesk.addPartyQueue(addPartyView.getParty());
 	}
 
-	/**
-	 * Receive a broadcast from a ControlDesk
-	 *
-	 * @param ce	the ControlDeskEvent that triggered the handler
-	 *
-	 */
-
-	public void receiveControlDeskEvent(ControlDeskEvent ce) {
-		partyList.setListData(((Vector) ce.getPartyQueue()));
+	@Override
+	public void update(Observable o, Object arg) {
+		ControlDesk cd;
+		try{
+			cd = (ControlDesk)o;
+		}catch(Exception e){
+			return;
+		}
+		partyList.setListData((Vector) cd.getPartyQueue());
 	}
 }
