@@ -124,7 +124,7 @@ class searchDATABASE {
             int presentscore = Integer.parseInt(splitData[2]);
             String presentplayer = splitData[0];
 
-            if (presentplayer.equals(playerName) && highScore < presentscore) {
+            if (presentplayer.equals(playerName) && highScore < presentscore) {  // checking if player name is same as input and score is highest or not
                 highScore = presentscore;
                 returnString = splitData[2];
             }
@@ -147,12 +147,12 @@ class searchDATABASE {
             int presentscore = Integer.parseInt(splitData[2]);
             String presentplayer = splitData[0];
 
-            if (presentplayer.equals(playerName) && lowestscore > presentscore) {
+            if (presentplayer.equals(playerName) && lowestscore > presentscore) { // checking if player name is same as input and score is lowest or not
                 lowestscore = presentscore;
                 returnString = splitData[2];
             }
         }
-
+  // returning string 
         return returnString;
     }
 }
