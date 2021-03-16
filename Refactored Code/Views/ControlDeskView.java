@@ -16,6 +16,7 @@ public class ControlDeskView implements ActionListener, Observer {
 	private JButton finished;
 	private JButton assign;
 	private JFrame win;
+	private JButton searchDATABASE;
 	private JList partyList;
 	/** The maximum number of members in a party. */
 	private int maxMembers;
@@ -78,7 +79,13 @@ public class ControlDeskView implements ActionListener, Observer {
 			lanePanel.setBorder(new TitledBorder("Lane" + ++laneCount ));
 			laneStatusPanel.add(lanePanel);
 		}
-
+               //DATABASE PART
+		searchDATABASE = new JButton("searchDATABASE");
+		JPanel searchDATABASEPanel = new JPanel();
+		searchDATABASEPanel.setLayout(new FlowLayout());
+		searchDATABASE.addActionListener(this);
+		searchDATABASEPanel.add(searchDATABASE);
+		controlsPanel.add(searchDATABASEPanel);
 		// Party Queue Panel
 		JPanel partyPanel = new JPanel();
 		partyPanel.setLayout(new FlowLayout());
