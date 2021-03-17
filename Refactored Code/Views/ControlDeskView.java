@@ -142,6 +142,9 @@ public class ControlDeskView implements ActionListener, Observer {
 			win.setVisible(false);
 			System.exit(0);
 		}
+		if (e.getSource().equals(searchDATABASE)) {
+			searchView searchableView = new searchView();
+		}
 	}
 
 	/**
