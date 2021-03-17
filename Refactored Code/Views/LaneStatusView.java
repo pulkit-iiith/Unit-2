@@ -16,6 +16,7 @@ public class LaneStatusView implements ActionListener, Observer {
 	private JButton viewLane;
 	private JButton viewPinSetter;
 	private JButton maintenance;
+	private JButton viewEmoji;
 	private PinSetterView psv;
 	private LaneView lv;
 	private Lane lane;
@@ -23,6 +24,7 @@ public class LaneStatusView implements ActionListener, Observer {
 
 	boolean laneShowing;
 	boolean psShowing;
+	boolean emojiShowing;
 
 	public LaneStatusView(Lane lane, int laneNum ) {
 		this.lane = lane;
@@ -30,6 +32,7 @@ public class LaneStatusView implements ActionListener, Observer {
 
 		laneShowing=false;
 		psShowing=false;
+		emojiShowing=false;
 		Pinsetter ps = lane.getPinsetter();
 		psv = new PinSetterView( ps, laneNum );
 		ps.addObserver(this);
@@ -54,6 +57,13 @@ public class LaneStatusView implements ActionListener, Observer {
 		viewLanePanel.setLayout(new FlowLayout());
 		viewLane.addActionListener(this);
 		viewLanePanel.add(viewLane);
+		
+		viewEmoji = new JButton("Emoji");
+		JPanel emojiPanel = new JPanel();
+		emojiPanel.setLayout(new FlowLayout());
+		viewEmoji.addActionListener(this);
+		viewEmoji.setBackground(Color.RED);
+		emojiPanel.add(viewEmoji);
 
 		viewPinSetter = new JButton("Pinsetter");
 		JPanel viewPinSetterPanel = new JPanel();
@@ -75,6 +85,7 @@ public class LaneStatusView implements ActionListener, Observer {
 		buttonPanel.add(viewLanePanel);
 		buttonPanel.add(viewPinSetterPanel);
 		buttonPanel.add(maintenancePanel);
+		buttonPanel.add(emojiPanel);
 
 		jp.add( cLabel );
 		jp.add( curBowler );
@@ -88,13 +99,18 @@ public class LaneStatusView implements ActionListener, Observer {
 	}
 
 	public void actionPerformed( ActionEvent e ) {
-		if ( lane.isPartyAssigned() && e.getSource().equals(viewPinSetter) ) {
-			if ( !psShowing ) {
-				psv.show();
-				psShowing=true;
-			} else if ( psShowing ) {
-				psv.hide();
-				psShowing=false;
+		if ( lane.isPartyAssigned()) {
+			psv.setnum(this.lane.getParty().getMembers().size());
+			
+			if(e.getSource().equals(viewPinSetter))
+			{
+				if ( !psShowing ) {
+					psv.show();
+					psShowing=true;
+				} else if ( psShowing ) {
+					psv.hide();
+					psShowing=false;
+				}
 			}
 		}
 		if (e.getSource().equals(viewLane) && lane.isPartyAssigned()) { 
@@ -114,6 +130,19 @@ public class LaneStatusView implements ActionListener, Observer {
 			else{
 				lane.pauseGame();
 				maintenance.setBackground( Color.RED );
+			}
+		}
+		if (e.getSource().equals(viewEmoji)) {
+			if ( lane.isPartyAssigned() ) { 
+				if ( emojiShowing == false ) {
+					emojiShowing=true;
+					viewEmoji.setBackground(Color.GREEN);
+					psv.setemoji(true);
+				} else if ( emojiShowing == true ) {
+					emojiShowing=false;
+					viewEmoji.setBackground(Color.RED);
+					psv.setemoji(false);
+				}
 			}
 		}
 	}
@@ -157,17 +186,31 @@ public class LaneStatusView implements ActionListener, Observer {
 					}
 					break;
 				}
-			}				
-			curBowler.setText(le.getCurrentThrower().getNickName());
+			}
+			
+			String bowlerNick = le.getCurrentThrower().getNickName();
+			curBowler.setText(bowlerNick);
+			Vector bvect=le.getParty().getMembers();
+			for(int i=0;i<bvect.size();i++)
+			{
+				Bowler b=(Bowler)bvect.get(i);
+				if(b.getNickName() == bowlerNick)
+				{
+					psv.setbowlerindex(i);
+					break;
+				}
+			}
 			if ( le.isGameIsHalted() ) {
 				maintenance.setBackground( Color.RED );
 			}	
 			if ( !lane.isPartyAssigned() ) {
 				viewLane.setEnabled( false );
 				viewPinSetter.setEnabled( false );
+				viewEmoji.setEnabled(false);
 			} else {
 				viewLane.setEnabled( true );
 				viewPinSetter.setEnabled( true );
+				viewEmoji.setEnabled(true);
 			}
 		}
 	}	
