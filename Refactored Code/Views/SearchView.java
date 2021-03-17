@@ -1,12 +1,13 @@
+package Views;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 import java.io.*;
 
 
-public class SearchView {
+public class searchView {
 
-    SearchView() {
+    searchView() {
 
         Frame fra = new Frame("Searchable View");
         Label l = new Label("Select query for different players:");
@@ -47,7 +48,7 @@ public class SearchView {
                 else if (queryparse.equals("Highest score of specific")) {
                     try {
                         String playerName = t.getText();
-                        result = "Result: " + searchDATABASE.giveHighestofScoreSpecific(playerName);
+                        result = "Result: " + searchDATABASE.giveHighestScoreofSpecific(playerName);
                     }
                     catch (Exception e) {
                         result = "Error retriving top player.";
@@ -100,7 +101,7 @@ public class SearchView {
         fra.add(r);
 
         fra.setLayout(new FlowLayout());
-        fra.setSize(600, 300);
+        fra.setSize(600, 800);
 
         fra.setVisible(true);
     }
@@ -112,7 +113,7 @@ class searchDATABASE {
 
 
     public static String giveHighestScoreofSpecific(String playerName) throws FileNotFoundException, IOException {
-        File myobj = new File("SCOREHISTORY.DAT");
+        File myobj = new File("/home/ady/SEM2/SE/Unit-2/Refactored Code/SCOREHISTORY.DAT");
         Scanner reader = new Scanner(myobj);
 
         int highScore = -1;
@@ -135,7 +136,7 @@ class searchDATABASE {
 
 
     public static String giveLowestScoreofSpecific(String playerName) throws FileNotFoundException, IOException {
-        File myobj = new File("SCOREHISTORY.DAT");
+        File myobj = new File("/home/ady/SEM2/SE/Unit-2/Refactored Code/SCOREHISTORY.DAT");
         Scanner reader = new Scanner(myobj);
 
         int lowestscore = 301;
@@ -155,4 +156,106 @@ class searchDATABASE {
   // returning string 
         return returnString;
     }
+    public static String giveLast5ScoreSpecific(String playerName) throws FileNotFoundException, IOException {
+		File myObj = new File("/home/ady/SEM2/SE/Unit-2/Refactored Code/SCOREHISTORY.DAT");
+		Scanner myReader = new Scanner(myObj);
+		
+		String returnString = "";
+
+		java.util.List<String> reverseFile = new ArrayList<String>();
+
+		while (myReader.hasNextLine()) {
+			String data = myReader.nextLine();
+			reverseFile.add(data);
+		}
+
+		int count = 0;
+		for(int i = reverseFile.size()-1; i >= 0; i--) {
+			String data = reverseFile.get(i);
+			String[] splitData = data.split("\t");
+			String curPlayer = splitData[0];
+
+			if (curPlayer.equals(playerName)) {
+				returnString += splitData[2] + " on " + splitData[1] + ";     ";
+				count += 1;
+			}
+
+			if (count == 5) {
+				break;
+			}
+		}
+	
+		if (count == 0) {
+			returnString = "No scores found!";
+		}
+
+		return returnString;
+	}
+    
+    public static String giveHighestScoreAll() throws FileNotFoundException, IOException {
+		File myObj = new File("/home/ady/SEM2/SE/Unit-2/Refactored Code/SCOREHISTORY.DAT");
+		Scanner myReader = new Scanner(myObj);
+		
+		int highScore = -1;
+		String returnString = "No high score!";
+		
+		while (myReader.hasNextLine()) {
+			String data = myReader.nextLine();
+			String[] splitData = data.split("\t");
+			int curScore = Integer.parseInt(splitData[2]);
+			
+			if (highScore < curScore) {
+				highScore = curScore;
+				returnString = splitData[2];
+			}
+		}
+
+		return returnString;
+	}
+
+
+	public static String giveLowestScoreAll() throws FileNotFoundException, IOException {
+		File myObj = new File("/home/ady/SEM2/SE/Unit-2/Refactored Code/SCOREHISTORY.DAT");
+		Scanner myReader = new Scanner(myObj);
+		
+		int lowScore = 301;
+		String returnString = "No low score!";
+		
+		while (myReader.hasNextLine()) {
+			String data = myReader.nextLine();
+			String[] splitData = data.split("\t");
+			int curScore = Integer.parseInt(splitData[2]);
+			
+			if (lowScore > curScore) {
+				lowScore = curScore;
+				returnString = splitData[2];
+			}
+		}
+
+		return returnString;
+	}
+
+
+	public static String giveTopPlayer() throws FileNotFoundException, IOException {
+		File myObj = new File("/home/ady/SEM2/SE/Unit-2/Refactored Code/SCOREHISTORY.DAT");
+		Scanner myReader = new Scanner(myObj);
+		
+		int highScore = -1;
+		String returnString = "No top player!";
+		
+		while (myReader.hasNextLine()) {
+			String data = myReader.nextLine();
+			String[] splitData = data.split("\t");
+			int curScore = Integer.parseInt(splitData[2]);
+			
+			if (highScore < curScore) {
+				highScore = curScore;
+				returnString = splitData[0];
+			}
+		}
+
+		return returnString;
+	}
+
+
 }
