@@ -152,7 +152,7 @@ class searchDATABASE {
                 returnString = splitData[2];
             }
         }
-  // returning string 
+  // returning string  //
         return returnString;
     }
 }
