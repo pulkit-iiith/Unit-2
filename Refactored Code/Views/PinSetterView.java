@@ -1,6 +1,11 @@
 package Views;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import Main.Pinsetter;
@@ -12,9 +17,12 @@ public class PinSetterView implements Observer {
     private Vector pinVect = new Vector ( );
     private JPanel firstRoll;
     private JPanel secondRoll;
-
-	private JFrame frame;
+    private Vector emojiVector = new Vector ();
+    private Dictionary imageVector = new Hashtable();
     
+	private JFrame frame;
+	private Boolean emoji;
+	private int totalPlayers=10,bowlerindex;
     /**
      * Constructs a Pin Setter GUI displaying which roll it is with
      * yellow boxes along the top (1 box for first roll, 2 boxes for second)
@@ -27,6 +35,7 @@ public class PinSetterView implements Observer {
      */
     public PinSetterView ( Pinsetter ps, int laneNum ) {
 		ps.addObserver(this);
+		this.emoji = false;
 		frame = new JFrame ( "Lane " + laneNum + ":" );
 		
 		Container cpanel = frame.getContentPane ( );
@@ -139,6 +148,25 @@ public class PinSetterView implements Observer {
 		pins.add ( new JPanel ( ) );
 		//*********************************************************
 		
+		
+		JPanel bot = new JPanel();
+		bot.setLayout(new GridLayout(1,10));
+
+		for(Integer i=0;i<this.totalPlayers;i++){
+			JPanel e = new JPanel();
+			try {
+			BufferedImage image = ImageIO.read(new File("D:\\Software Engineering\\SWE_Project\\Refactored Code\\emojis\\cool.png"));
+			Image rimage=image.getScaledInstance(30,30,Image.SCALE_SMOOTH);
+			JLabel el = new JLabel(new ImageIcon(rimage));
+			e.add(el);
+			emojiVector.add(el);
+			bot.add(e);
+			} catch (IOException ex){
+				ex.printStackTrace();
+			}
+
+		}
+		
 		top.setBackground ( Color.black );
 		
 		cpanel.add ( top, BorderLayout.NORTH );
@@ -147,8 +175,32 @@ public class PinSetterView implements Observer {
 		pins.setForeground ( Color.yellow );
 		
 		cpanel.add ( pins, BorderLayout.CENTER );
+		bot.setBackground(Color.LIGHT_GRAY);
+		cpanel.add(bot,BorderLayout.SOUTH);
 		
 		frame.pack();
+		
+		Map<String,String> imgsrc=new HashMap<String,String>();
+		imgsrc.put("laugh","D:\\Software Engineering\\SWE_Project\\Refactored Code\\emojis\\laugh.jpg");
+		imgsrc.put("love","D:\\Software Engineering\\SWE_Project\\Refactored Code\\emojis\\love.jpg");
+		imgsrc.put("medium_smile","D:\\Software Engineering\\SWE_Project\\Refactored Code\\emojis\\medium_smile.jpg");
+		imgsrc.put("perfect","D:\\Software Engineering\\SWE_Project\\Refactored Code\\emojis\\perfect.jpg");
+		imgsrc.put("facepalm","D:\\Software Engineering\\SWE_Project\\Refactored Code\\emojis\\facepalm.jpg");
+		imgsrc.put("cry","D:\\Software Engineering\\SWE_Project\\Refactored Code\\emojis\\cry.jpg");
+		imgsrc.put("cry_hard","D:\\Software Engineering\\SWE_Project\\Refactored Code\\emojis\\cry_hard.jpg");
+		imgsrc.put("cool","D:\\Software Engineering\\SWE_Project\\Refactored Code\\emojis\\cool.png");
+		imgsrc.put("smile","D:\\Software Engineering\\SWE_Project\\Refactored Code\\emojis\\smile.jpg");
+
+		for(Map.Entry m : imgsrc.entrySet()){
+			try {
+			String s=(String)m.getValue();
+			BufferedImage image = ImageIO.read(new File(s));
+			Image rimage=image.getScaledInstance(30,30,Image.SCALE_SMOOTH);
+			imageVector.put(m.getKey(),new ImageIcon(rimage));
+			} catch (IOException ex){
+				ex.printStackTrace();
+			}
+		}
 	}
     
     public void show() {
@@ -161,7 +213,41 @@ public class PinSetterView implements Observer {
 
 	@Override
 	public void update(Observable o, Object arg) {
+		
+		
+		
+		
 		PinsetterEvent pe = (PinsetterEvent)arg;
+		
+		JLabel emo=new JLabel();
+		for(int i=0;i<this.totalPlayers;i++)
+		{
+			emo=(JLabel)emojiVector.get(i);
+
+			switch(pe.totalPinsDown())
+			{
+				case 0:
+					if(i==this.bowlerindex)
+						emo.setIcon((ImageIcon)imageVector.get("cry_hard"));
+					else
+						emo.setIcon((ImageIcon)imageVector.get("facepalm"));
+					break;
+				case 10:
+					if(i==this.bowlerindex)
+						emo.setIcon((ImageIcon)imageVector.get("cool"));
+					else
+						emo.setIcon((ImageIcon)imageVector.get("perfect"));
+					break;
+				default:
+					emo.setIcon((ImageIcon)imageVector.get("smile"));
+					
+			}
+			if(this.emoji)
+				emo.setEnabled(true);
+			else
+				emo.setEnabled(false);
+		}
+		
 		if ( !pe.isFoulCommited() ) {
 	    	JLabel tempPin = new JLabel ( );
 	    	boolean pin;
@@ -181,6 +267,23 @@ public class PinSetterView implements Observer {
 				((JLabel)pinVect.get(i)).setForeground(Color.black);
 			}
 			secondRoll.setBackground( Color.black);
+		}
+	}
+	
+	public void setemoji(Boolean fl){
+		this.emoji=fl;
+	}
+
+	public void setbowlerindex(int index){
+		this.bowlerindex=index;
+	}
+
+	public void setnum(int x){
+		this.totalPlayers=x;
+		for(int i=x;i<10;i++)
+		{
+			JLabel emo=(JLabel)emojiVector.get(i);
+			emo.setEnabled(false);
 		}
 	}
 }

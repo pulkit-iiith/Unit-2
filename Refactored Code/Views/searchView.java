@@ -113,7 +113,7 @@ class searchDATABASE {
 
 
     public static String giveHighestScoreofSpecific(String playerName) throws FileNotFoundException, IOException {
-        File myobj = new File("/home/ady/SEM2/SE/Unit-2/Refactored Code/SCOREHISTORY.DAT");
+        File myobj = new File("D:\\Software Engineering\\SWE_Project\\Refactored Code\\SCOREHISTORY.DAT");
         Scanner reader = new Scanner(myobj);
 
         int highScore = -1;
@@ -136,7 +136,7 @@ class searchDATABASE {
 
 
     public static String giveLowestScoreofSpecific(String playerName) throws FileNotFoundException, IOException {
-        File myobj = new File("/home/ady/SEM2/SE/Unit-2/Refactored Code/SCOREHISTORY.DAT");
+        File myobj = new File("D:\\Software Engineering\\SWE_Project\\Refactored Code\\SCOREHISTORY.DAT");
         Scanner reader = new Scanner(myobj);
 
         int lowestscore = 301;
@@ -157,7 +157,7 @@ class searchDATABASE {
         return returnString;
     }
     public static String giveLast5ScoreSpecific(String playerName) throws FileNotFoundException, IOException {
-		File myObj = new File("/home/ady/SEM2/SE/Unit-2/Refactored Code/SCOREHISTORY.DAT");
+		File myObj = new File("D:\\Software Engineering\\SWE_Project\\Refactored Code\\SCOREHISTORY.DAT");
 		Scanner myReader = new Scanner(myObj);
 		
 		String returnString = "";
@@ -193,7 +193,7 @@ class searchDATABASE {
 	}
     
     public static String giveHighestScoreAll() throws FileNotFoundException, IOException {
-		File myObj = new File("/home/ady/SEM2/SE/Unit-2/Refactored Code/SCOREHISTORY.DAT");
+		File myObj = new File("D:\\Software Engineering\\SWE_Project\\Refactored Code\\SCOREHISTORY.DAT");
 		Scanner myReader = new Scanner(myObj);
 		
 		int highScore = -1;
@@ -215,7 +215,7 @@ class searchDATABASE {
 
 
 	public static String giveLowestScoreAll() throws FileNotFoundException, IOException {
-		File myObj = new File("/home/ady/SEM2/SE/Unit-2/Refactored Code/SCOREHISTORY.DAT");
+		File myObj = new File("D:\\Software Engineering\\SWE_Project\\Refactored Code\\SCOREHISTORY.DAT");
 		Scanner myReader = new Scanner(myObj);
 		
 		int lowScore = 301;
@@ -237,7 +237,7 @@ class searchDATABASE {
 
 
 	public static String giveTopPlayer() throws FileNotFoundException, IOException {
-		File myObj = new File("/home/ady/SEM2/SE/Unit-2/Refactored Code/SCOREHISTORY.DAT");
+		File myObj = new File("D:\\Software Engineering\\SWE_Project\\Refactored Code\\SCOREHISTORY.DAT");
 		Scanner myReader = new Scanner(myObj);
 		
 		int highScore = -1;
