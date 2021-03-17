@@ -4,9 +4,9 @@ import java.util.*;
 import java.io.*;
 
 
-public class searchview {
+public class SearchView {
 
-    searchview() {
+    SearchView() {
 
         Frame fra = new Frame("Searchable View");
         Label l = new Label("Select query for different players:");
