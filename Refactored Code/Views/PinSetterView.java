@@ -155,7 +155,7 @@ public class PinSetterView implements Observer {
 		for(Integer i=0;i<this.totalPlayers;i++){
 			JPanel e = new JPanel();
 			try {
-			BufferedImage image = ImageIO.read(new File("D:\\Software Engineering\\SWE_Project\\Refactored Code\\emojis\\cool.png"));
+			BufferedImage image = ImageIO.read(new File("D:\\Software Engineering\\Unit-2\\Refactored Code\\emojis\\cool.png"));
 			Image rimage=image.getScaledInstance(30,30,Image.SCALE_SMOOTH);
 			JLabel el = new JLabel(new ImageIcon(rimage));
 			e.add(el);
@@ -181,15 +181,15 @@ public class PinSetterView implements Observer {
 		frame.pack();
 		
 		Map<String,String> imgsrc=new HashMap<String,String>();
-		imgsrc.put("laugh","D:\\Software Engineering\\SWE_Project\\Refactored Code\\emojis\\laugh.jpg");
-		imgsrc.put("love","D:\\Software Engineering\\SWE_Project\\Refactored Code\\emojis\\love.jpg");
-		imgsrc.put("medium_smile","D:\\Software Engineering\\SWE_Project\\Refactored Code\\emojis\\medium_smile.jpg");
-		imgsrc.put("perfect","D:\\Software Engineering\\SWE_Project\\Refactored Code\\emojis\\perfect.jpg");
-		imgsrc.put("facepalm","D:\\Software Engineering\\SWE_Project\\Refactored Code\\emojis\\facepalm.jpg");
-		imgsrc.put("cry","D:\\Software Engineering\\SWE_Project\\Refactored Code\\emojis\\cry.jpg");
-		imgsrc.put("cry_hard","D:\\Software Engineering\\SWE_Project\\Refactored Code\\emojis\\cry_hard.jpg");
-		imgsrc.put("cool","D:\\Software Engineering\\SWE_Project\\Refactored Code\\emojis\\cool.png");
-		imgsrc.put("smile","D:\\Software Engineering\\SWE_Project\\Refactored Code\\emojis\\smile.jpg");
+		imgsrc.put("laugh","D:\\Software Engineering\\Unit-2\\Refactored Code\\emojis\\laugh.jpg");
+		imgsrc.put("love","D:\\Software Engineering\\Unit-2\\Refactored Code\\emojis\\love.jpg");
+		imgsrc.put("medium_smile","D:\\Software Engineering\\Unit-2\\Refactored Code\\emojis\\medium_smile.jpg");
+		imgsrc.put("perfect","D:\\Software Engineering\\Unit-2\\Refactored Code\\emojis\\perfect.jpg");
+		imgsrc.put("facepalm","D:\\Software Engineering\\Unit-2\\Refactored Code\\emojis\\facepalm.jpg");
+		imgsrc.put("cry","D:\\Software Engineering\\Unit-2\\Refactored Code\\emojis\\cry.jpg");
+		imgsrc.put("cry_hard","D:\\Software Engineering\\Unit-2\\Refactored Code\\emojis\\cry_hard.jpg");
+		imgsrc.put("cool","D:\\Software Engineering\\Unit-2\\Refactored Code\\emojis\\cool.png");
+		imgsrc.put("smile","D:\\Software Engineering\\Unit-2\\Refactored Code\\emojis\\smile.jpg");
 
 		for(Map.Entry m : imgsrc.entrySet()){
 			try {

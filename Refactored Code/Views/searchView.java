@@ -156,7 +156,7 @@ class searchDATABASE {
         return returnString;
     }
     public static String giveLast5ScoreSpecific(String playerName) throws FileNotFoundException, IOException {
-		File myObj = new File("D:\\Software Engineering\\SWE_Project\\Refactored Code\\SCOREHISTORY.DAT");
+		File myObj = new File("D:\\Software Engineering\\Unit-2\\Refactored Code\\SCOREHISTORY.DAT");
 		Scanner myReader = new Scanner(myObj);
 		
 		String returnString = "";
