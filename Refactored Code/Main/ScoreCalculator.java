@@ -55,20 +55,20 @@ public class ScoreCalculator {
 			
 			// Check for Penalty
 			if(i > 1) {
-				// check consecutive 2 throws 0 or not
-				if(bowlersScores[i] == 0 && bowlersScores[i] == bowlersScores[i - 1]) {
-					if(i == 2) {
+				if(i == 2) {
+					if(bowlersScores[1] == bowlersScores[0] && bowlersScores[1] == 0) {
 						prevScore -= bowlersScores[2] / 2;
 					}
-					else {
-						int maximum = bowlersScores[0];
-						int idx = 1;
-						while(idx < i - 1) {
-							maximum = Math.max(maximum, bowlersScores[idx]);
-							idx++;
-						}
-						prevScore -= maximum / 2;
+				}
+				// check consecutive 2 throws 0 or not
+				if( i != 2 && bowlersScores[i] == 0 && bowlersScores[i] == bowlersScores[i - 1]) {
+					int maximum = bowlersScores[0];
+					int idx = 1;
+					while(idx < i - 1) {
+						maximum = Math.max(maximum, bowlersScores[idx]);
+						idx++;
 					}
+					prevScore -= maximum / 2;
 				}
 			}
 
