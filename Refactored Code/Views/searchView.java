@@ -14,7 +14,7 @@ public class searchView {
         Choice cho = new Choice();
         TextField t = new TextField("Fill name of the player if needed:");
         Button but = new Button("Search");
-        Label r = new Label("Result: ");  // Result.
+        TextField r = new TextField(40);  // Result.
 
         cho.add("Highest score among all");
         cho.add("Lowest score among all");
@@ -34,7 +34,7 @@ public class searchView {
                         result = "Result: " + searchDATABASE.giveLowestScoreAll();
                     }
                     catch (Exception e) {
-                        result = "Error retriving lowest score.";
+                        result = "Error retrieving lowest score.";
                     }
                 }
                 else if (queryparse.equals("Top player")) {
@@ -42,7 +42,7 @@ public class searchView {
                         result = "Result: " + searchDATABASE.giveTopPlayer();
                     }
                     catch (Exception e) {
-                        result = "Error retriving top player.";
+                        result = "Error retrieving top player.";
                     }
                 }
                 else if (queryparse.equals("Highest score of specific")) {
@@ -51,7 +51,7 @@ public class searchView {
                         result = "Result: " + searchDATABASE.giveHighestScoreofSpecific(playerName);
                     }
                     catch (Exception e) {
-                        result = "Error retriving top player.";
+                        result = "Error retrieving top player.";
                     }
                 }
                 else if (queryparse.equals("Lowest score of specific")) {
@@ -60,7 +60,7 @@ public class searchView {
                         result = "Result: " + searchDATABASE.giveLowestScoreofSpecific(playerName);
                     }
                     catch (Exception e) {
-                        result = "Error retriving top player.";
+                        result = "Error retrieving top player.";
                     }
                 }
                 else if (queryparse.equals("Highest score among all")) {
@@ -68,7 +68,7 @@ public class searchView {
                         result = "Result: " + searchDATABASE.giveHighestScoreAll();
                     }
                     catch (Exception e) {
-                        result = "Error retriving highest score.";
+                        result = "Error retrieving highest score.";
                     }
                 }
                 else if (queryparse.equals("Last 5 score specific")) {
@@ -77,7 +77,7 @@ public class searchView {
                         result = "Result: " + searchDATABASE.giveLast5ScoreSpecific(playerName);
                     }
                     catch (Exception e) {
-                        result = "Error retriving top player.";
+                        result = "Error retrieving top player.";
                     }
                 }
                 else {
@@ -99,10 +99,9 @@ public class searchView {
         fra.add(t);
         fra.add(but);
         fra.add(r);
-
+	r.setColumns(20);
         fra.setLayout(new FlowLayout());
-        fra.setSize(600, 800);
-
+        fra.setSize(400, 400);
         fra.setVisible(true);
     }
 
